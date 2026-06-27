@@ -67,7 +67,7 @@ if busqueda:
                     for p in [p for p in filtrados if p["Familia_Producto"] == fam]:
                         presentacion_limpia = limpiar_presentacion(p['Presentacion'])
                         precio = f"${p['Precio']:,}".replace(",", ".")
-                        texto += f"• {presentacion_limpia}  ➡️  {precio}\n"
+                        texto += f"• {presentacion_limpia}  ->  {precio}\n"
                     texto += "\n"
                 texto += "¿Cuál de estas opciones preparamos para tu despacho?"
             
@@ -80,7 +80,7 @@ if busqueda:
                 for p in bloque:
                     presentacion_limpia = limpiar_presentacion(p['Presentacion'])
                     precio = f"${p['Precio']:,}".replace(",", ".")
-                    texto += f"• {presentacion_limpia}  ➡️  {precio}\n"
+                    texto += f"• {presentacion_limpia}  ->  {precio}\n"
                 
                 texto += "\n¿Te gustaría que agendemos alguna de estas presentaciones?"
 
