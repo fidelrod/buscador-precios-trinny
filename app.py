@@ -10,18 +10,14 @@ st.title("Buscador de Precios - Trinny")
 
 # --- Función para limpiar palabras de empaque ---
 def limpiar_presentacion(texto):
-    # Lista de palabras a eliminar (empaques)
     palabras_a_eliminar = ["tarro", "caja", "frasco", "sobre", "ampolla", "und", "unidades"]
-    # Creamos un patrón para buscar las palabras ignorando mayúsculas/minúsculas
     patron = r'\b(' + '|'.join(palabras_a_eliminar) + r')\b'
-    # Reemplazamos por vacío y limpiamos espacios extra
     limpio = re.sub(patron, '', texto, flags=re.IGNORECASE).strip()
     return limpio
 
 # 1. Configuración de conexión desde los "Secrets"
 @st.cache_resource
 def conectar_db():
-    # Convertimos el string JSON guardado en Secrets a un diccionario
     key_dict = json.loads(st.secrets["textkey"])
     creds = service_account.Credentials.from_service_account_info(key_dict)
     return firestore.Client(credentials=creds)
@@ -57,13 +53,15 @@ if busqueda:
         seleccion = st.selectbox("Selecciona la referencia:", familias)
 
         if seleccion:
-            # Lógica de construcción del mensaje
+            # Lógica de construcción del mensaje con negritas
             texto = ""
             
             if seleccion == "ENVIAR TODAS LAS REFERENCIAS":
-                texto = f"Portafolio: {busqueda.capitalize()}\n\n"
+                # Título principal en negrita
+                texto = f"*Portafolio: {busqueda.capitalize()}*\n\n"
                 for fam in familias[1:]:
-                    texto += f"{fam.title()}\n"
+                    # Título de la familia en negrita
+                    texto += f"*{fam.title()}*\n"
                     for p in [p for p in filtrados if p["Familia_Producto"] == fam]:
                         presentacion_limpia = limpiar_presentacion(p['Presentacion'])
                         precio = f"${p['Precio']:,}".replace(",", ".")
@@ -72,11 +70,11 @@ if busqueda:
                 texto += "¿Cuál de estas opciones preparamos para tu despacho?"
             
             else:
-                # Caso individual
-                bloque = [p for p in filtrados if p["Familia_Producto"] == seleccion]
+                # Caso individual: Encabezado/Producto principal en negrita
                 encabezado = seleccion.title()
-                texto = f"{encabezado}\n\n"
+                texto = f"*{encabezado}*\n\n"
                 
+                bloque = [p for p in filtrados if p["Familia_Producto"] == seleccion]
                 for p in bloque:
                     presentacion_limpia = limpiar_presentacion(p['Presentacion'])
                     precio = f"${p['Precio']:,}".replace(",", ".")
